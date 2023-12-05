@@ -101,7 +101,23 @@ do
     esac
 done
 mkdir -p $(dirname ${output})
-# output=$(realpath ${output}/$(date +%s))
+# Get absolute path (more portable across different Unix-like systems)
+if [ -d "${output}" ]; then
+    output=$(cd "${output}"; pwd)
+elif [ -f "${output}" ]; then
+    output=$(cd "$(dirname "${output}")"; pwd)/$(basename "${output}")
+else
+    # Handle the case where the file does not exist yet
+    output_dir=$(dirname "${output}")
+    if [ ! -d "${output_dir}" ]; then
+        mkdir -p "${output_dir}"
+    fi
+    output_dir=$(cd "${output_dir}"; pwd)
+    output="${output_dir}/$(basename "${output}")"
+fi
+
+echo "output dir"
+echo $output
 reconstruction_dir=${output}/reconstruction
 simulation_dir=${output}/simulation
 mkdir -p ${simulation_dir}
@@ -185,7 +201,7 @@ function generate_reconstruction() {
     mkdir -p ${output_dir}
 
     echo $(date) - Run 3D reconstruction ${suffix}
-    ln -rs ${simulation_dir}/tiltseries${suffix}.mrc ${output_dir}/tiltseries${suffix}.mrc
+    ln -s ${simulation_dir}/tiltseries${suffix}.mrc ${output_dir}/tiltseries${suffix}.mrc
 
     cat << EOF > ${output_dir}/newst.com
 \$setenv IMOD_OUTPUT_FORMAT MRC
