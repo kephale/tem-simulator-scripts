@@ -10,7 +10,7 @@ setup(
     name='tem-simulator-scripts',
     use_scm_version={'write_to': 'temsimscripts/__init__.py'},  # True,
     setup_requires=['setuptools_scm'],
-    python_requires='>=3.7.0, <3.10',
+    python_requires='>=3.7.0',
     packages=[
         'temsimscripts'
     ],
