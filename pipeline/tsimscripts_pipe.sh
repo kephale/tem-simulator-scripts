@@ -101,7 +101,7 @@ do
     esac
 done
 mkdir -p $(dirname ${output})
-output=$(realpath ${output%/}.$(date -Is))
+# output=$(realpath ${output}/$(date +%s))
 reconstruction_dir=${output}/reconstruction
 simulation_dir=${output}/simulation
 mkdir -p ${simulation_dir}
